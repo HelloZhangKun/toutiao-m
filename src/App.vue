@@ -5,6 +5,7 @@
     <div>
       <i class="iconfont icon-lishi"></i>
     </div>
+    <div class="box"></div>
     <router-view />
   </div>
 </template>
@@ -14,4 +15,8 @@ export default {
 }
 </script>
 <style lang="less">
+.box {
+  width: 100px;
+  height: 100px;
+}
 </style>
