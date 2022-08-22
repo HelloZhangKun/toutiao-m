@@ -4,6 +4,8 @@ import router from './router'
 import store from './store'
 // 加载全局样式
 import '@/styles/index.less'
+// 全局加载vant组件文件
+import '@/plugins'
 Vue.config.productionTip = false
 
 new Vue({
