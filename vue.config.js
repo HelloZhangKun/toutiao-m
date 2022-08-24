@@ -12,7 +12,8 @@ module.exports = {
         pathRewrite: { '^/app': '' },
         ws: true,
         changeOrigin: true
-      }
+      },
+     
     }
   }
 }
