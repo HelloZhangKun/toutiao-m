@@ -8,6 +8,8 @@ import '@/styles/index.less'
 import '@/plugins'
 // 加载动态设置rem基准值
 import 'amfe-flexible'
+// 引入时间格式
+import "@/utils/day.js"
 Vue.config.productionTip = false
 
 new Vue({

@@ -1,41 +1,42 @@
 <template>
   <div class="article-item">
     <van-cell-group>
-    <van-cell>
-      <div slot="title" class="title">
-        {{ article.title }}
-      </div>
-      <!-- 如果有三张图片则在下方显示 -->
-      <div slot="label">
-        <div v-if="article.cover.type === 3" class="cover-wrap">
-          <div
-            class="cover-item"
-            v-for="(item, index) in article.cover.images"
-            :key="index"
-          >
-            <van-image
-              class="cover-img"
-              slot="default"
-              fit="cover"
-              :src="item"
-            />
+      <van-cell>
+        <div slot="title" class="title">
+          {{ article.title }}
+        </div>
+        <!-- 如果有三张图片则在下方显示 -->
+        <div slot="label">
+          <div v-if="article.cover.type === 3" class="cover-wrap">
+            <div
+              class="cover-item"
+              v-for="(item, index) in article.cover.images"
+              :key="index"
+            >
+              <van-image
+                class="cover-img"
+                slot="default"
+                fit="cover"
+                :src="item"
+              />
+            </div>
+          </div>
+          <div class="article-info">
+            <span>{{ article.aut_name }}</span>
+            <span>{{ article.comm_count }}评论</span>
+            <!-- 时间过滤器 relativeTime -->
+            <span>{{ article.pubdate | relativeTime }}</span>
           </div>
         </div>
-        <div class="article-info">
-          <span>{{ article.aut_name }}</span>
-          <span>{{ article.comm_count }}评论</span>
-          <span>{{ article.pubdate }}</span>
-        </div>
-      </div>
-      <!-- 如果只有一张图则显示此组件 -->
-      <van-image
-        v-if="article.cover.type === 1"
-        slot="default"
-        fit="cover"
-        :src="article.cover.images[0]"
-        class="right-cover"
-      />
-    </van-cell>
+        <!-- 如果只有一张图则显示此组件 -->
+        <van-image
+          v-if="article.cover.type === 1"
+          slot="default"
+          fit="cover"
+          :src="article.cover.images[0]"
+          class="right-cover"
+        />
+      </van-cell>
     </van-cell-group>
   </div>
 </template>
@@ -48,6 +49,7 @@ export default {
       type: Object,
       required: true
     }
+   
   }
 }
 </script>
@@ -82,7 +84,7 @@ export default {
     .cover-item {
       flex: 1;
       height: 146px;
-      &:not(:last-child){
+      &:not(:last-child) {
         padding-right: 4px;
       }
       .cover-img {

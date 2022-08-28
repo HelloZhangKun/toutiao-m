@@ -8,6 +8,7 @@
         size="small"
         icon="search"
         round
+        to="/search"
         >搜索</van-button
       >
     </van-nav-bar>
@@ -19,9 +20,25 @@
       </van-tab>
       <div slot="nav-right" class="placeholder"></div>
       <div slot="nav-right" class="gengduo-btn">
-        <i class="iconfont icon-gengduo"></i>
+        <i class="iconfont icon-gengduo" @click="popupShow"></i>
       </div>
     </van-tabs>
+    <!-- 弹出层 -->
+    <van-popup
+      v-model="moreShow"
+      closeable
+      close-icon-position="top-left"
+      position="bottom"
+      :style="{ height: '100%' }"
+    >
+      <!-- 内容展示 -->
+      <ChannelEdit
+        :channels="channels"
+        :active="active"
+        @upDataActive="onUpDataActive"
+      >
+      </ChannelEdit>
+    </van-popup>
   </div>
 </template>
 
@@ -29,16 +46,24 @@
 import { channelList } from '@/api/user'
 // 引入文章列表组件
 import ArticleList from './components/articleList.vue'
-
+// 引入弹出层组件
+import ChannelEdit from './components/channel-edit.vue'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 export default {
   name: 'Home',
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
+  },
+  computed: {
+    ...mapState('user')
   },
   data() {
     return {
       active: 0,
-      channels: []
+      channels: [],
+      moreShow: false //弹层显示
     }
   },
   created() {
@@ -46,14 +71,38 @@ export default {
   },
   methods: {
     async loadChannels() {
-      // 获取频道数据
+      // 获取首页频道列表数据
       try {
-        const { data } = await channelList()
-        this.channels = data.data.channels
         // console.log(data)
+        let channels = []
+        if (this.user) {
+          // 如果已经登录则获取登录用户的频道列表
+          const { data } = await channelList()
+          channels = data.data.channels
+        } else {
+          // 如果没有登录则查看本地存储
+          const localChannel = getItem('TOUTIAO_CHANNELS')
+          if (localChannel) {
+            // 如果本地存储有数据
+            channels = localChannel
+          } else {
+            const { data } = await channelList()
+            channels = data.data.channels
+          }
+        }
+        this.channels = channels
       } catch (error) {
         this.$toast('获取频道列表失败')
       }
+    },
+
+    popupShow() {
+      // 弹出层事件
+      this.moreShow = true
+    },
+    onUpDataActive(idx, iChannelEditShow = true) {
+      this.active = idx
+      this.moreShow = iChannelEditShow
     }
   }
 }
