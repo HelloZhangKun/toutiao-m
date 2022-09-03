@@ -1,7 +1,7 @@
 <template>
   <div class="article-item">
     <van-cell-group>
-      <van-cell>
+      <van-cell :to="`/article/${article.art_id}`">
         <div slot="title" class="title">
           {{ article.title }}
         </div>
@@ -49,7 +49,6 @@ export default {
       type: Object,
       required: true
     }
-   
   }
 }
 </script>
