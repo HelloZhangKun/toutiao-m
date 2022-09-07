@@ -35,3 +35,24 @@ export const channelList = () => {
     method: "GET"
   })
 }
+
+// 关注用户
+export const addFollowings = (target) => {
+  return request({
+    url: "v1_0/user/followings",
+    method: "POST",
+    data:{
+      target
+    }
+  })
+}
+
+// 取消关注用户
+export const cancelFollowings = (target) => {
+  return request({
+    url: `v1_0/user/followings/${target}`,
+    method: "DELETE",
+    
+  })
+}
+
