@@ -41,7 +41,7 @@ export const addFollowings = (target) => {
   return request({
     url: "v1_0/user/followings",
     method: "POST",
-    data:{
+    data: {
       target
     }
   })
@@ -52,7 +52,25 @@ export const cancelFollowings = (target) => {
   return request({
     url: `v1_0/user/followings/${target}`,
     method: "DELETE",
-    
+
   })
 }
+
+// 获取用户个人信息
+export const getUserProfile = () => {
+  return request({
+    url: `v1_0/user/profile`,
+    method: "GET",
+  })
+}
+
+// 编辑用户个人信息
+export const editUserInfo = (data) => {
+  return request({
+    url: `v1_0/user/profile`,
+    method: "PATCH",
+    data
+  })
+}
+
 

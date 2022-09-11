@@ -8,7 +8,9 @@
           <span class="name">{{ userInfo.name }}</span>
         </div>
         <div class="right">
-          <van-button class="edit-info" size="mini" round>编辑资料</van-button>
+          <van-button class="edit-info" size="mini" to="/user/profile" round
+            >编辑资料</van-button
+          >
         </div>
       </div>
       <div class="data-stats">
@@ -69,12 +71,12 @@ import { mapState } from 'vuex'
 import { getUserInfo } from '@/api/user'
 export default {
   name: 'My',
-  data () {
+  data() {
     return {
       userInfo: {}
     }
   },
-  created () {
+  created() {
     if (this.user) {
       // 获取用户自己信息
       this.loadUserInfo()
@@ -84,7 +86,7 @@ export default {
     ...mapState(['user'])
   },
   methods: {
-    loginOut () {
+    loginOut() {
       // 退出登录
       this.$dialog
         .confirm({
@@ -98,7 +100,7 @@ export default {
         .catch(() => {})
     },
     // 获取用户自己信息
-    async loadUserInfo () {
+    async loadUserInfo() {
       try {
         const { data } = await getUserInfo()
         this.userInfo = data.data

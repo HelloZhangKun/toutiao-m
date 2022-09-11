@@ -8,11 +8,13 @@
       :error="error"
       error-text="加载失败,请点击重试"
       @load="onLoad"
+      :immediate-check="true"
     >
       <CommentItem
         v-for="(item, index) in list"
         :key="index"
         :comment="item"
+        @replay-click="$emit('replay-click', $event)"
       />
     </van-list>
   </div>
@@ -20,7 +22,7 @@
 
 <script>
 import { getComments } from '@/api/comment'
-import  CommentItem  from './comment-item.vue'
+import CommentItem from './comment-item.vue'
 export default {
   name: 'ArticleComment',
   components: {
@@ -30,11 +32,23 @@ export default {
     sourceId: {
       type: [Number, String, Object],
       require: true
+    },
+    list: {
+      type: Array,
+      default: () => []
+    },
+    type: {
+      type: String,
+      // 自定义数据验证
+      validator(value) {
+        return ['a', 'c'].includes(value)
+      },
+      default: 'a'
     }
   },
   data() {
     return {
-      list: [], // 评论列表
+      // list: [], // 评论列表
       loading: false, // 上拉加载更多的 loading
       finished: false, // 是否加载结束
       offset: null, // 请求下一页数据的页码
@@ -44,6 +58,8 @@ export default {
     }
   },
   created() {
+    // 进入开启loading
+    this.loading = true
     this.onLoad()
   },
   methods: {
@@ -51,8 +67,8 @@ export default {
       try {
         // 1. 请求获取数据
         const { data } = await getComments({
-          type: 'a', //评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
-          source: this.sourceId, //源id，文章id或评论id
+          type: this.type, //评论类型，a-对文章(article)的评论，c-对评论(comment)的回复
+          source: this.sourceId.toString(), //源id，文章id或评论id
           offset: this.offset,
           limit: this.limit
         })

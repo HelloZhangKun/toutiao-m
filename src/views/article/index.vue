@@ -52,12 +52,14 @@
         <!-- 文章评论组件 -->
         <ArticleComment
           @total_success="totalCount = $event.total_count"
+          :list="commentList"
           :sourceId="newsArticle.art_id"
+          @replay-click="onReplayClick"
         />
         <!-- 底部区域 -->
         <div class="article-bottom">
           <van-button
-            @click="bottomTopup"
+            @click="release = true"
             class="comment-btn"
             type="default"
             round
@@ -82,7 +84,7 @@
         </div>
         <!-- /底部区域 -->
         <van-popup v-model="release" position="bottom">
-          <CommentPop :articleId="newsArticle.art_id" />
+          <CommentPop :articleId="newsArticle.art_id" @post_success="onPost" />
         </van-popup>
       </div>
       <!-- /加载完成-文章详情 -->
@@ -104,6 +106,15 @@
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
+
+    <!-- 评论回复 -->
+    <van-popup v-model="isReplay" position="bottom" style="height: 100%">
+      <ArticleReply
+        v-if="isReplay"
+        :comment="currentComment"
+        @close="isReplay = false"
+      />
+    </van-popup>
   </div>
 </template>
 
@@ -121,6 +132,8 @@ import LickArticle from '@/components/lick-article'
 import ArticleComment from './components/article-comment'
 // 评论弹窗
 import CommentPop from './components/comment-pop.vue'
+// 评论弹窗组件
+import ArticleReply from './components/article-reply.vue'
 export default {
   name: 'ArticleIndex',
   components: {
@@ -128,7 +141,8 @@ export default {
     Collect,
     LickArticle,
     ArticleComment,
-    CommentPop
+    CommentPop,
+    ArticleReply
   },
   props: {
     articleId: {
@@ -142,7 +156,15 @@ export default {
       loading: true, //加载中的loading状态
       status: 0, //失败的状态码
       totalCount: 0,
-      release: false
+      release: false,
+      commentList: [], //评论列表
+      isReplay: false,
+      currentComment: {} //当前点击回复的评论项
+    }
+  },
+  provide: function () {
+    return {
+      articleId: this.articleId
     }
   },
   computed: {},
@@ -191,9 +213,14 @@ export default {
         }
       })
     },
-    // 评论弹出层
-    bottomTopup() {
-      this.release = true
+    onPost(data) {
+      this.release = false
+      this.commentList.unshift(data.new_obj)
+    },
+
+    onReplayClick(event) {
+      this.currentComment = event
+      this.isReplay = true
     }
   }
 }

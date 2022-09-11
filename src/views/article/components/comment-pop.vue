@@ -2,7 +2,7 @@
   <div class="comment-post">
     <van-field
       class="post-field"
-      v-model="message"
+      v-model.trim="message"
       rows="2"
       autosize
       type="textarea"
@@ -10,7 +10,12 @@
       placeholder="请输入留言"
       show-word-limit
     />
-    <van-button class="post-btn" @click="addPostComment">发布</van-button>
+    <van-button
+      class="post-btn"
+      @click="addPostComment"
+      :disabled="!message.length"
+      >发布</van-button
+    >
   </div>
 </template>
 
@@ -25,6 +30,7 @@ export default {
       require: true
     }
   },
+  inject: ['articleId'],
   data() {
     return {
       message: ''
@@ -36,15 +42,23 @@ export default {
   mounted() {},
   methods: {
     async addPostComment() {
+      this.$toast.loading({
+        message: '发布中...',
+        forbidClick: true,
+        duration: 0
+      })
       try {
         const { data } = await addComment({
           target: this.articleId,
           content: this.message,
-          art_id: null
+          art_id: this.articleId
         })
-        console.log(data)
+
+        this.message = ''
+        this.$emit('post_success', data.data)
+        this.$toast.success('发布成功')
       } catch (error) {
-        this.$toast('发布失败')
+        this.$toast.fail('发布失败')
       }
     }
   }

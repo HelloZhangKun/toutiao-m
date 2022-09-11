@@ -9,6 +9,7 @@
     />
     <div slot="title" class="title-wrap">
       <div class="user-name">{{ comment.aut_name }}</div>
+     
       <van-button
         class="like-btn"
         :class="{
@@ -22,12 +23,16 @@
     </div>
 
     <div slot="label">
-      <p class="comment-content">{{ comment.results }}</p>
+      <p class="comment-content">{{ comment.content }}</p>
       <div class="bottom-info">
         <span class="comment-pubdate">{{
           comment.pubdate | relativeTime
         }}</span>
-        <van-button class="reply-btn" round>
+        <van-button
+          class="reply-btn"
+          @click="$emit('replay-click', comment)"
+          round
+        >
           回复{{ comment.reply_count }}</van-button
         >
       </div>
