@@ -73,4 +73,13 @@ export const editUserInfo = (data) => {
   })
 }
 
+// 编辑用户头像
+export const editUserPhoto = (data) => {
+  return request({
+    url: `v1_0/user/photo`,
+    method: "PATCH",
+    data
+  })
+}
+
 
